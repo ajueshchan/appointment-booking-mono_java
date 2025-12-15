@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @Slf4j
@@ -50,5 +53,39 @@ public class UserController {
             userDtoList.add(userDto);
         });
         return userDtoList;
+    }
+
+    @GetMapping("/bulkAdd")
+    @Transactional
+    public List<Users> addingUserBulk(){
+        UserDto user1 = new UserDto();
+        user1.setId(1L);
+        user1.setEmail("john.admin@example.com");
+        user1.setFirstName("John");
+        user1.setLastName("Admin");
+        user1.setPhone("9876543210");
+        user1.setPassword("p1");
+        user1.setRole(UserRole.TRAINER.name());
+        user1.setStatus(UserStatus.ACTIVE.name());
+
+        UserDto user2 = new UserDto();
+        user2.setId(2L);
+        user2.setEmail("jane.customer@example.com");
+        user2.setFirstName("Jane");
+        user2.setLastName("Customer");
+        user2.setPhone("9123456789");
+        user2.setPassword("p2");
+        user2.setRole(UserRole.CUSTOMER.name());
+        user2.setStatus(UserStatus.ACTIVE.name());
+
+        // Use in a list
+        List<UserDto> users = Arrays.asList(user1, user2);
+        List<Users> userEntities = new ArrayList<>();
+        users.forEach(userDto -> {
+            Users userTest = new Users();
+            BeanUtils.copyProperties(userDto,userTest);
+            userEntities.add(userTest);
+        });
+        return usersRepository.saveAllAndFlush(userEntities);
     }
 }
