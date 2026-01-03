@@ -36,10 +36,6 @@ public class Users {
     @Email(message = "Invalid email format")
     private String email;
 
-    @Column(name="password", nullable = false, length = 255)
-    @NotBlank(message = "Password is required")
-    private String password;
-
     @Column(name = "first_name", nullable = false, length = 50)
     @NotBlank(message = "First name is required")
     @Size(max = 50, message = "First name must not exceed 50 characters")
@@ -72,6 +68,7 @@ public class Users {
     @PrePersist
     public void onCreatedAt() {
         this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     @PreUpdate

@@ -1,13 +1,13 @@
 package com.arjun.appointment.controller;
 
-import com.arjun.appointment.token.JwtTokenGeneration;
+import com.arjun.appointment.security.token.JwtTokenGeneration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/auth/v1")
 public class TokenProviderController {
 
     private final JwtTokenGeneration jwtTokenGeneration;
