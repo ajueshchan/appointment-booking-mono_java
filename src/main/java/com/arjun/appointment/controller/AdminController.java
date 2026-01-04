@@ -2,11 +2,13 @@ package com.arjun.appointment.controller;
 
 import com.arjun.appointment.dto.request.TrainerDtoRequest;
 import com.arjun.appointment.dto.request.UserDtoRequest;
-import com.arjun.appointment.dto.response.Response;
+import com.arjun.appointment.dto.response.SlotDtoResponse;
+import com.arjun.appointment.dto.response.TrainerResponse;
 import com.arjun.appointment.dto.response.TrainersDtoResponse;
 import com.arjun.appointment.dto.response.UserDtoResponse;
 import com.arjun.appointment.entity.Trainers;
 import com.arjun.appointment.entity.Users;
+import com.arjun.appointment.service.Iservice.SlotService;
 import com.arjun.appointment.service.Iservice.TrainerService;
 import com.arjun.appointment.service.Iservice.UsersService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +28,18 @@ import static com.arjun.appointment.constant.TokenConstant.ROLE_ADMIN_TRAINER;
 @Slf4j
 @RestController
 @RequestMapping("/public/gym")
-public class GymController {
+public class AdminController {
 
     private final UsersService usersService;
     private final TrainerService trainerService;
+    private final SlotService slotService;
 
-    public GymController(UsersService usersService,
-                         TrainerService trainerService) {
+    public AdminController(UsersService usersService,
+                           TrainerService trainerService,
+                           SlotService slotService) {
         this.usersService = usersService;
         this.trainerService = trainerService;
+        this.slotService = slotService;
     }
 
     @PreAuthorize(ROLE_ADMIN)
@@ -51,13 +56,25 @@ public class GymController {
 
     @PreAuthorize(ROLE_ADMIN_TRAINER)
     @GetMapping(path = "/trainers/get", name = "Get All the Trainers List from DB")
-    public Response<List<TrainersDtoResponse>, ?> getTrainers(){
+    public TrainerResponse<List<TrainersDtoResponse>, ?> getTrainers(){
         return trainerService.getAllTrainers();
     }
 
     @PreAuthorize(ROLE_ADMIN_TRAINER)
     @PostMapping(path = "/trainers/add", name = "Persist Trainers to DB")
-    public Response<List<Trainers>, List<TrainerDtoRequest>> addTrainers(@RequestBody List<TrainerDtoRequest> trainerDtoRequest){
+    public TrainerResponse<List<Trainers>, List<TrainerDtoRequest>> addTrainers(@RequestBody List<TrainerDtoRequest> trainerDtoRequest){
         return trainerService.persistTrainerDetails(trainerDtoRequest);
+    }
+
+    @PreAuthorize(ROLE_ADMIN)
+    @GetMapping(path = "/slot/assign", name = "Assign trainers to slots")
+    public String trainerSlotsAssignment(){
+        return slotService.assignTrainersToSlots();
+    }
+
+    @PreAuthorize(ROLE_ADMIN)
+    @GetMapping(path = "/slot/get", name = "Fetch trainers slots")
+    public List<SlotDtoResponse> getTrainerSlots(){
+        return slotService.getTrainerSlots();
     }
 }

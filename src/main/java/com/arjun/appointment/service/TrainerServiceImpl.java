@@ -1,8 +1,10 @@
 package com.arjun.appointment.service;
 
 import com.arjun.appointment.dto.request.TrainerDtoRequest;
-import com.arjun.appointment.dto.response.Response;
+import com.arjun.appointment.dto.response.TrainerResponse;
+import com.arjun.appointment.dto.response.SlotDtoResponse;
 import com.arjun.appointment.dto.response.TrainersDtoResponse;
+import com.arjun.appointment.entity.Slot;
 import com.arjun.appointment.entity.Trainers;
 import com.arjun.appointment.entity.Users;
 import com.arjun.appointment.repository.TrainerRepository;
@@ -13,11 +15,21 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.arjun.appointment.constant.AppointmentConstant.ACTIVE_STATUS;
+import static com.arjun.appointment.constant.AppointmentConstant.FAILURE_FETCH_TRAINER;
+import static com.arjun.appointment.constant.AppointmentConstant.PERSON_PER_SLOT;
+import static com.arjun.appointment.constant.AppointmentConstant.SLOT_TIME;
+import static com.arjun.appointment.constant.AppointmentConstant.SUCCESS_FETCH_TRAINER;
+import static com.arjun.appointment.constant.AppointmentConstant.SUCCESS_PERSIST_TRAINER;
+import static com.arjun.appointment.constant.AppointmentConstant.UNREGISTERED_USER;
 import static com.arjun.appointment.utils.Predicates.isActiveUserPredicate;
 import static com.arjun.appointment.utils.Predicates.isInActiveUserPredicate;
 
@@ -35,7 +47,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Transactional
     @Override
-    public Response<List<Trainers>, List<TrainerDtoRequest>> persistTrainerDetails(List<TrainerDtoRequest> trainerDtoRequestList) {
+    public TrainerResponse<List<Trainers>, List<TrainerDtoRequest>> persistTrainerDetails(List<TrainerDtoRequest> trainerDtoRequestList) {
 
         Map<String,Users> activeUsersMap = validateTrainerRequest(trainerDtoRequestList);
         Set<String> activeUserMail = activeUsersMap.keySet();
@@ -53,22 +65,22 @@ public class TrainerServiceImpl implements TrainerService {
                .filter(isInActiveUserPredicate(activeUserMail)).toList();
 
         if(trainersToBePersisted.isEmpty()){
-            return Response.failure("No Active MailIds",missingUserMail);
+            return TrainerResponse.failure(UNREGISTERED_USER,missingUserMail);
         }else if(!missingUserMail.isEmpty()){
-            return Response.partial("No Active MailIds",savedTrainers,missingUserMail);
+            return TrainerResponse.partial(UNREGISTERED_USER,savedTrainers,missingUserMail);
         }
-        return Response.success("Data Saved Successfully", savedTrainers);
+        return TrainerResponse.success(SUCCESS_PERSIST_TRAINER, savedTrainers);
     }
 
     private Map<String,Users> validateTrainerRequest(List<TrainerDtoRequest> trainerDtoRequestList) {
       List<String> userMailIds = trainerDtoRequestList.stream().map(TrainerDtoRequest::getEmailId).toList();
-      List<Users> activeUsers = usersRepository.findByEmailInAndStatus(userMailIds,"ACTIVE");
+      List<Users> activeUsers = usersRepository.findByEmailInAndStatus(userMailIds, ACTIVE_STATUS);
       return activeUsers.stream().collect(Collectors.toMap(Users::getEmail,user-> user));
     }
 
     @Transactional
     @Override
-    public Response<List<TrainersDtoResponse>,?> getAllTrainers() {
+    public TrainerResponse<List<TrainersDtoResponse>,?> getAllTrainers() {
        List<Trainers> trainers = trainerRepository.findAll();
        List<TrainersDtoResponse> trainersDtoResponses = trainers.stream().map(trainer -> {
            var trainerResp = new TrainersDtoResponse();
@@ -77,8 +89,8 @@ public class TrainerServiceImpl implements TrainerService {
        }).toList();
 
         if(trainersDtoResponses.isEmpty()){
-            return Response.failure("No Trainers in Gym",List.of());
+            return TrainerResponse.failure(FAILURE_FETCH_TRAINER,List.of());
         }
-        return Response.success("Fetched Data Successfully", trainersDtoResponses);
+        return TrainerResponse.success(SUCCESS_FETCH_TRAINER, trainersDtoResponses);
     }
 }

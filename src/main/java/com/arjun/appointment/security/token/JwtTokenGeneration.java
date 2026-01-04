@@ -2,7 +2,7 @@ package com.arjun.appointment.security.token;
 
 
 import com.arjun.appointment.AppointmentBookingApplication;
-import com.arjun.appointment.constant.ResponseConstant;
+import com.arjun.appointment.constant.AppointmentConstant;
 import com.arjun.appointment.dto.response.UserDtoResponse;
 import com.arjun.appointment.repository.UsersRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -72,7 +72,7 @@ public class JwtTokenGeneration {
             acceptableClaimInfoForTheEmailId.put(PHONE,fetchUser.getPhone());
             return createToken(acceptableClaimInfoForTheEmailId, fetchUser.getEmail());
         }
-        return ResponseConstant.NO_INFO;
+        return AppointmentConstant.NO_INFO;
     }
 
     private String createToken(Map<String, Object> acceptableClaimInfoForTheEmailId, String subject) {

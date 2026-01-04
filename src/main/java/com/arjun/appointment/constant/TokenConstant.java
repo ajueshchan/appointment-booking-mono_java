@@ -11,4 +11,5 @@ public class TokenConstant {
     public static final String ROLE_ADMIN = "hasRole('ADMIN')";
     public static final String ROLE_ADMIN_CUSTOMER = "hasAnyRole('ADMIN','CUSTOMER')";
     public static final String ROLE_ADMIN_TRAINER = "hasAnyRole('ADMIN','TRAINER')";
+    public static final String ROLE_ADMIN_TRAINER_CUSTOMER = "hasAnyRole('ADMIN','TRAINER','CUSTOMER')";
 }
