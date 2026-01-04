@@ -27,9 +27,9 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers("/auth/**").permitAll()
                         // Role-based access
-                        .requestMatchers("/public/users/**").hasRole("ADMIN")
-                        .requestMatchers("/public/users/**").hasAnyRole("TRAINER", "ADMIN")
-                        .requestMatchers("/public/users/**").hasAnyRole("CUSTOMER", "TRAINER", "ADMIN")
+                        .requestMatchers("/public/gym/**").hasRole("ADMIN")
+                        .requestMatchers("/public/gym/trainers/**").hasAnyRole("TRAINER", "ADMIN")
+                        .requestMatchers("/public/gym/users/**").hasAnyRole("CUSTOMER", "ADMIN")
 
                         // All other requests need authentication
                         .anyRequest().authenticated()

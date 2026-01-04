@@ -4,7 +4,7 @@ import com.arjun.appointment.dto.request.UserDtoRequest;
 import com.arjun.appointment.dto.response.UserDtoResponse;
 import com.arjun.appointment.entity.Users;
 import com.arjun.appointment.repository.UsersRepository;
-import com.arjun.appointment.service.Iservice.AdminService;
+import com.arjun.appointment.service.Iservice.UsersService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class UsersServiceImpl implements UsersService {
 
     private final UsersRepository usersRepository;
 
-    public AdminServiceImpl(UsersRepository usersRepository){
+    public UsersServiceImpl(UsersRepository usersRepository){
         this.usersRepository = usersRepository;
     }
 

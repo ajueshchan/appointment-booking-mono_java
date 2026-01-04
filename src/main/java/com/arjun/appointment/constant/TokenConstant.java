@@ -9,6 +9,6 @@ public class TokenConstant {
     public static final String EMAIL = "email";
     public static final String PHONE = "phone";
     public static final String ROLE_ADMIN = "hasRole('ADMIN')";
-    public static final String ROLE_CUSTOMER = "hasRole('CUSTOMER')";
-    public static final String ROLE_TRAINER = "hasRole('TRAINER')";
+    public static final String ROLE_ADMIN_CUSTOMER = "hasAnyRole('ADMIN','CUSTOMER')";
+    public static final String ROLE_ADMIN_TRAINER = "hasAnyRole('ADMIN','TRAINER')";
 }

@@ -6,7 +6,7 @@ import com.arjun.appointment.entity.Users;
 
 import java.util.List;
 
-public interface AdminService {
+public interface UsersService {
     List<Users> persistUserDetails(List<UserDtoRequest> userDtoRequest);
     List<UserDtoResponse> getAllUsers();
 }
