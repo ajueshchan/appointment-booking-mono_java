@@ -1,13 +1,16 @@
 package com.arjun.appointment.controller;
 
+import com.arjun.appointment.dto.request.BookingRequestDto;
 import com.arjun.appointment.dto.request.TrainerDtoRequest;
 import com.arjun.appointment.dto.request.UserDtoRequest;
+import com.arjun.appointment.dto.response.BookingResponseDto;
 import com.arjun.appointment.dto.response.SlotDtoResponse;
 import com.arjun.appointment.dto.response.TrainerResponse;
 import com.arjun.appointment.dto.response.TrainersDtoResponse;
 import com.arjun.appointment.dto.response.UserDtoResponse;
 import com.arjun.appointment.entity.Trainers;
 import com.arjun.appointment.entity.Users;
+import com.arjun.appointment.service.Iservice.BookingService;
 import com.arjun.appointment.service.Iservice.SlotService;
 import com.arjun.appointment.service.Iservice.TrainerService;
 import com.arjun.appointment.service.Iservice.UsersService;
@@ -22,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.arjun.appointment.constant.TokenConstant.ROLE_ADMIN;
+import static com.arjun.appointment.constant.TokenConstant.ROLE_ADMIN_CUSTOMER;
 import static com.arjun.appointment.constant.TokenConstant.ROLE_ADMIN_TRAINER;
+import static com.arjun.appointment.constant.TokenConstant.ROLE_ADMIN_TRAINER_CUSTOMER;
 
 
 @Slf4j
@@ -33,13 +38,16 @@ public class AdminController {
     private final UsersService usersService;
     private final TrainerService trainerService;
     private final SlotService slotService;
+    private final BookingService bookingService;
 
     public AdminController(UsersService usersService,
                            TrainerService trainerService,
-                           SlotService slotService) {
+                           SlotService slotService,
+                           BookingService bookingService) {
         this.usersService = usersService;
         this.trainerService = trainerService;
         this.slotService = slotService;
+        this.bookingService = bookingService;
     }
 
     @PreAuthorize(ROLE_ADMIN)
@@ -72,9 +80,15 @@ public class AdminController {
         return slotService.assignTrainersToSlots();
     }
 
-    @PreAuthorize(ROLE_ADMIN)
+    @PreAuthorize(ROLE_ADMIN_TRAINER_CUSTOMER)
     @GetMapping(path = "/slot/get", name = "Fetch trainers slots")
     public List<SlotDtoResponse> getTrainerSlots(){
         return slotService.getTrainerSlots();
+    }
+
+    @PreAuthorize(ROLE_ADMIN_CUSTOMER)
+    @PostMapping(path = "/users/book", name = "Book Trainers from available slot")
+    public BookingResponseDto bookTrainer(@RequestBody BookingRequestDto bookingRequestDto){
+        return bookingService.persistToBooking(bookingRequestDto);
     }
 }

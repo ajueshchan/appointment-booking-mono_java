@@ -11,6 +11,7 @@ public class AppointmentConstant {
     public static final String UNREGISTERED_USER = "Un Registered User found";
     public static final String SLOT_ASSIGNED_FOR_TRAINERS = "Slot Assigned Successfully";
     public static final String NO_TRAINER_FOR_SLOT = "No available trainers found";
+    public static final String SUCCESS_BOOKED_TRAINER = "Trainer Booked Successfully";
     public static final int MORNING_FIRST_SLOT_START_TIME = 6;
     public static final int MORNING_FIRST_SLOT_END_TIME = 8;
     public static final int MORNING_SECOND_SLOT_START_TIME = 8;
