@@ -20,7 +20,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "slots",schema = "appointment_db")
+@Table(name = "slots",schema = "appointment")
 public class Slot {
 
     @Id

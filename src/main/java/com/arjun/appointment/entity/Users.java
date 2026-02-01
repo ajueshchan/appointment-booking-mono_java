@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Entity
-@Table(name = "users", schema = "appointment_db")
+@Table(name = "users", schema = "appointment")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

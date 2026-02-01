@@ -19,7 +19,7 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "trainers",schema = "appointment_db")
+@Table(name = "trainers",schema = "appointment")
 public class Trainers {
 
     @Id
@@ -32,6 +32,9 @@ public class Trainers {
 
     @Column(name = "category", nullable = false, length = 50)
     private String category;
+
+    @Column(name="description",nullable = false,length = 100)
+    private String description;
 
     @Column(name = "salary")
     private Long salary;
